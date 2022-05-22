@@ -37,25 +37,38 @@
 
 {% block content %}
 <div class="container-fluid">
+    
     <h2 class="all-head">All Software</h2>
     <div class="row">
 
-        {% for item in apps %}
+        {% for user in users %}
         <div class="col-lg-3 col-md-6 col-sl-12">
             <a href="#">
-                <div class="card cus-card card2" style="width: 25rem;">
-                    <img src="{{item.logo.url}}" class="card-img-top custom-height img-fluid" alt="...">
+                <form method="post" class="card cus-card card2" style="width: 18rem;">
+                    {% csrf_token %}
                     <div class="card-body">
-                        <h5 class="card-title">{{item.app_name}}</h5>
-                        <p>Developer Name: {{item.user.username}}</p>
-                        <P>Size: {{item.size}} {{item.size_type}}</P>
-                        <p>version: {{item.version}}</p>
+                        <input type="hidden" name="id" value="{{user.id}}">
+                        <h5 class="card-title">{{user.username}}</h5>
+                        <p>Email: {{user.email}}</p>
+
+                        {% if user.groups.all|length %}
+                        <p>group: developer</p>
+                        {% elif user.is_superuser %}
+                        <p>group: Admin</p>
+                        {% else %}
+                        <p>group: user</p>
+                        {% endif %}
+
                     </div>
+                    {% if user.groups.all|length %}
+                    {% elif user.is_superuser %}
+
+                    {% else %}
                     <div class="card-footer">
-                        <a class="btn btn-sm btn-outline-danger d-block ms-auto" href="{% url 'download' item.id %}"> <i class="fa fa-download" aria-hidden="true"></i>
-                            Download beta </a>
+                        <button type="submit" class="btn btn-primary">Make Developer</button>
                     </div>
-                </div>
+                    {% endif %}
+                </form>
             </a>
         </div>
 

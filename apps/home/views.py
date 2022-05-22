@@ -12,6 +12,7 @@ from django.shortcuts import render, redirect, get_list_or_404, get_object_or_40
 from .models import *
 from .forms import *
 from django.contrib import messages
+from django.contrib.auth.models import Group
 
 
 @login_required(login_url="/login/")
@@ -55,28 +56,51 @@ def profileedit(request):
 
 @login_required(login_url="/login/")
 def add_software(request):
-    context = {'segment': 'newupload'}
-    form = ApplicationForm()
-    if request.method == 'POST':
-        form = ApplicationForm(request.POST, request.FILES)
-        if form.is_valid():
-            soft = form.save(commit=False)
-            soft.developer_name = request.user
-            soft.save()
-            messages.success(request, 'Application Successfully added.')
-            return redirect('all_software')
-        else:
-            messages.error(request, 'Application not added.')
-    context['form'] = form
-    html_template = loader.get_template('home/add_software.html')
-    return render(request, 'home/add_software.html', context=context)
-
+    is_dev = request.user.groups.filter(name='developer').exists()
+    print(is_dev)
+    if is_dev:
+        context = {'segment': 'newupload'}
+        form = ApplicationForm()
+        if request.method == 'POST':
+            form = ApplicationForm(request.POST, request.FILES)
+            if form.is_valid():
+                soft = form.save(commit=False)
+                soft.developer_name = request.user
+                soft.save()
+                messages.success(request, 'Application Successfully added.')
+                return redirect('all_software')
+            else:
+                messages.error(request, 'Application not added.')
+        context['form'] = form
+        html_template = loader.get_template('home/add_software.html')
+        return render(request, 'home/add_software.html', context=context)
+    else:
+        messages.error(request, 'You are not a developer. request admin.')
+        return redirect('all_software')
 
 def view_all_software(request):
     apps = Application.objects.all()
     categories = Category.objects.all()
     ctx = {'apps': apps, 'categories': categories}
     return render(request, 'home/all_software.html', ctx)
+
+def download(request, id):
+    app = get_object_or_404(Application, pk=id)
+    return redirect(app.setup.url)
+
+@login_required(login_url="/login/")
+def view_all_users(request):
+    if request.user.is_superuser and request.method =='POST':
+        id = request.POST.get('id')
+        user = User.objects.get(id=id)
+        group = Group.objects.get(name='developer')
+        user.groups.add(group)
+        messages.success(request, 'User added to developer group.')
+        return redirect('all_users')
+    group = Group.objects.get(name='developer')
+    users = User.objects.all()
+    ctx = {'users': users}
+    return render(request, 'home/all_users.html', ctx)
 
 
 @login_required(login_url="/login/")
