@@ -17,6 +17,8 @@ urlpatterns = [
     path('your/valuable/feedback/', views.feedback, name='feedback'),
     path('add/software/',views.add_software,name="add_software"),
     path('all/software/',views.view_all_software,name="all_software"),
+    path('all/users/',views.view_all_users,name="all_users"),
+    path('download/<int:id>/',views.download,name="download"),
     # Matches any html file
     
 ]
