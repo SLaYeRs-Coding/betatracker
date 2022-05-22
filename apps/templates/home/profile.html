@@ -1,0 +1,103 @@
+{% extends 'layouts\base.html' %}
+
+
+{% block stylesheets %}
+<style>
+    .contain {
+        background-color: #bbb8b84b;
+    }
+
+    .img-profile {
+        height: 200px;
+        border-radius: 100px;
+        margin-top: 100px;
+    }
+
+    .col-lg-11 {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 40px;
+        background-color: white;
+        border-radius: 20px;
+        padding: 0px;
+    }
+
+    .background {
+        background-image: url("{{profile.image.url}}");
+        background-position: center;
+        background-size: 120%;
+        border-radius: 20px 20px 0px 0px;
+    }
+
+    .pro-head {
+        text-align: center;
+        padding-top: 35px;
+        padding-bottom: 20px;
+    }
+
+    .latest {
+        padding-bottom: 20px;
+    }
+
+    .total-nft {
+        text-align: center;
+        padding-bottom: 20px;
+    }
+
+    .featured {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    a {
+        color: black;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: black;
+    }
+</style>
+
+{% endblock stylesheets %}
+
+
+
+{% block content %}
+<div class="contain">
+    <div class="row">
+        <div class="col-lg-11">
+            <div class="background">
+                <div class="container">
+                    <img class="img-fluid img-profile" src="{{profile.image.url}}" alt="">
+                </div>
+            </div>
+            <h2 class="pro-head">Welcome to your Dashboard {{user.username}}</h2>
+
+            <div class="container">
+                <h3 class="latest">Your Applications</h3>
+                {% for item in apps %}
+                <div class="col-lg-3 col-md-6 col-sl-12">
+                    <a href="#">
+                        <div class="card cus-card card2" style="width: 18rem;">
+                            <img src="{{item.logo.url}}" class="card-img-top custom-height" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{item.app_name}}</h5>
+                                <p>Developer Name: {{item.developer_name}}</p>
+                                <P>Size: {{item.size}} {{item.size_type}}</P>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                {% empty %}
+                <div class="alert alert-warning text-center" role="alert">
+                    <h4 class="alert-heading">No Software found!</h4>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content %}

@@ -1,0 +1,86 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka&display=swap');
+
+  a {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 400;
+  }
+
+  .btn-custom-login {
+    margin-right: 10px;
+  }
+
+  .btn-custom-register {
+    background-color: yellow;
+  }
+
+  .rp {
+    padding-left: 16px;
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid rp">
+    <a class="navbar-brand" href="{% url 'landing' %}">Betatracker</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+        {% if user.is_superuser %}
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Feedbacks</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Category Requests</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/admin">Admin</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'all_software' %}">All Software</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'add_software' %}">Add Software</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'feedback' %}">Feedback</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">About Us</a>
+        </li>
+
+        {% endif %}
+      </ul>
+      <form class="d-flex" action="#" autocomplete="off">
+        <input class="form-control custom-font rounded-0" type="search" placeholder="Search" aria-label="Search"
+          name="query">
+        <button class="btn btn-light rounded-0" type="submit"> <i class="fa fa-search" aria-hidden="true"></i> </button>
+      </form>
+      {% if user.is_authenticated %}
+      <div class="dropdown btn-drop custom-margin">
+        <a class="btn  dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          {{user.username}}
+        </a>
+
+        <ul class="dropdown-menu drop-menu" aria-labelledby="dropdownMenuLink">
+          <li><a class="dropdown-item" href="{% url 'view_profile' %}">Dashboard</a></li>
+          <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit your Profile</a></li>
+          <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+      </div>
+      {% else %}
+      <div class="float-none float-sm-right d-block mt-1 mt-sm-0">
+        <a href="{% url 'login' %}"><button class="btn btn-custom-login btn-outline-success">Login</button></a>
+      </div>
+      <div class="float-none float-sm-right d-block mt-1 mt-sm-0">
+        <a href="{% url 'register' %}"><button class="btn btn-custom-register btn-outline-success">Register</button></a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</nav>
